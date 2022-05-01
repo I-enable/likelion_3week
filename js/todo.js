@@ -17,15 +17,15 @@ let toDos = [];
 function saveToDos() {
   //[quiz] 값 추가 : 'localStorage'를 참고하여 값 추가하기
   //값을 문자열 객체로 저장하기 위하여 JSON.stringify 사용
-  localStorage._____(TODOS_KEY, JSON.stringify(toDos));
+  localStorage.setItem(TODOS_KEY, JSON.stringify(toDos));
 }
 
 function deleteToDo(event) {
-  //
+  // li 전체 부모태그를 찾아서 li변수에 할당 (그 행을 없애기위해)
   const li = event.target.parentElement;
   li.remove();
 
-  //
+  // toDos배열 내 id 값이 아닌 것만 toDos 배열에 도로 넣어줌 (지우지 않은것들만 남김)
   toDos = toDos.filter((toDo) => toDo.id !== parseInt(li.id));
   saveToDos();
 }
@@ -37,7 +37,7 @@ function completedTodo(event) {
   const is_checked = li.firstChild.checked;
 
   //[quiz] 체크 박스가 체크가 되었다면 if 부분이 실행, 아니면 else 부분 실행
-  if (is_checked === ___) {
+  if (is_checked === true) {
     li.style.textDecoration = "line-through";
     li.style.color = "grey";
   } else {
@@ -49,13 +49,13 @@ function completedTodo(event) {
 
 function paintToDo(newTodo) {
   //[quiz] appendChild() vs createElement() 비교하고 채워놓기
-  const li = document.__________("li");
+  const li = document.createElement("li");
   li.id = newTodo.id;
-  const checkbox = document.__________("input");
+  const checkbox = document.createElement("input");
   checkbox.type = "checkbox";
-  const span = document.__________("span");
+  const span = document.createElement("span");
   span.innerText = newTodo.text;
-  const button = document.__________("button");
+  const button = document.createElement("button");
   button.innerText = "❌";
   button.addEventListener("click", deleteToDo);
   checkbox.addEventListener("click", completedTodo);
@@ -66,11 +66,11 @@ function paintToDo(newTodo) {
 }
 
 function handleToDoSubmit(event) {
-  //
+  //이벤트에 대한 기본동작을 막음
   event.preventDefault();
 
   //[quiz] toDoInput의 값을 불러와 newTodo에 할당.
-  const _____ = toDoInput.value;
+  const newTodo = toDoInput.value;
 
   //값을 저장 받은 후, 엔터의 내용들을 지워준다.
   toDoInput.value = "";
@@ -91,17 +91,17 @@ function handleToDoSubmit(event) {
 toDoForm.addEventListener("submit", handleToDoSubmit);
 
 //[quiz] localStorage에서 값 불러오기
-const savedToDos = localStorage._____(TODOS_KEY);
+const savedToDos = localStorage.getItem(TODOS_KEY);
 
 //savedToDos가 localStorage에 존재한다면,
 if (savedToDos !== null) {
 
-  //
+  //문자열을 JSON형태로 변형후 parsedToDos에 할당
   const parsedToDos = JSON.parse(savedToDos);
 
   //toDos에 이를 할당,
   toDos = parsedToDos;
 
-  //
+  //parsedToDos 배열에 존재하는 원소들을 콜백함수를 통해 전부 화면에 배치함
   parsedToDos.forEach(paintToDo);
 }
